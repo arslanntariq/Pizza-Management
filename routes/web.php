@@ -18,6 +18,14 @@ use App\Http\Controllers\PizzaController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/welcome', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('show');
+});
+
 
 #pizza view using PizzaController
 Route::get('/pizzas', [PizzaController::class, 'index'])->name('pizzas.index')->middleware('auth');
@@ -28,6 +36,15 @@ Route::post('/pizzas', [PizzaController::class, 'store'])->name('pizzas.store');
 Route::get('/pizzas/{id}', [PizzaController::class, 'show'])->name('pizzas.show')->middleware('auth');
 // ... (existing routes)
 Route::patch('/pizzas/{id}/complete', [PizzaController::class, 'complete'])->name('pizzas.complete');
+// ... (existing code)
+
+Route::get('/register/customer', 'Auth\RegisterController@showCustomerRegistrationForm')->name('customer.register');
+Route::post('/register/customer', 'Auth\RegisterController@createCustomer')->name('customer.create');
+// routes/web.php
+
+
+
+
 Auth::routes();
 //'register' => false,
 
