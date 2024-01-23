@@ -13,13 +13,14 @@
   </ul>
   
   <p>Status: {{ $pizza->status }}</p>
-
-  @if ($pizza->status !== 'complete')
+  @if (Auth::check())
+    @if (Auth::user()->user_type == 'admin' && $pizza->status !== 'complete')
     <form action="{{ route('pizzas.complete', $pizza->id) }}" method="POST">
       @csrf
       @method('PATCH')
       <button>Complete Order</button>
     </form>
+    @endif
   @endif
 </div>
 <a href="{{ route('pizzas.index') }}" class="back"><- Back to all pizzas</a>

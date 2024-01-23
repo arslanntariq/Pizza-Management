@@ -18,7 +18,7 @@
       @yield('data')
 
       <footer>
-        <p>Copyright 2023 Pizza House</p>
+        <p>Copyright 2024 Pizza House</p>
       </footer>
     </body>
 </html>
