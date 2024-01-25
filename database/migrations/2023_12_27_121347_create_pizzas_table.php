@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('base');
             $table->string('name');
             $table->json('toppings');
-            $table->string('status')->default('incomplete');
+            $table->string('status')->default('waiting');
 
             // Add the user_id column
             $table->unsignedBigInteger('user_id')->nullable();

@@ -40,6 +40,10 @@ Route::patch('/pizzas/{id}/complete', [PizzaController::class, 'complete'])->nam
 
 Route::get('/register/customer', 'Auth\RegisterController@showCustomerRegistrationForm')->name('customer.register');
 Route::post('/register/customer', 'Auth\RegisterController@createCustomer')->name('customer.create');
+Route::patch('/pizzas/{id}/accept', [PizzaController::class, 'accept'])->name('pizzas.accept');
+    Route::patch('/pizzas/{id}/cancel', [PizzaController::class, 'cancel'])->name('pizzas.cancel');
+    Route::patch('/pizzas/{id}/dispatch', [PizzaController::class, 'dispatch'])->name('pizzas.dispatch');
+    Route::patch('/pizzas/{id}/deliver', [PizzaController::class, 'deliver'])->name('pizzas.deliver');
 // routes/web.php
 
 
