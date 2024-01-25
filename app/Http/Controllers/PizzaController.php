@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Pizza;
+use Carbon\Carbon;
+
 
 class PizzaController extends Controller
 {
@@ -14,7 +16,8 @@ class PizzaController extends Controller
         if ($user && $user->user_type == 'admin')
          {
             $pizzas = Pizza::latest()->get();
-        } elseif ($user) 
+        } 
+        elseif ($user) 
         {
             $pizzas = $user->pizzas()->latest()->get();
         } else 
@@ -52,14 +55,19 @@ class PizzaController extends Controller
         $pizza->base = $request->input('base');
         $pizza->toppings = $request->input('toppings');
 
-        if (Auth::check()) {
-            // Associate the pizza with the currently authenticated user
+        if (Auth::check())
+         {
+            
             $user = Auth::user();
-            $pizza->user_id = $user->id; // Assuming user_id is the foreign key in the pizzas table
+            $pizza->user_id = $user->id; 
         }
     
         // to mysql 
         $pizza->save();
+
+        // for auto delete
+        CancelOrder::dispatchAfter(now()->addMinutes(5), $pizza->id);
+
     
         // save in  session
         $request->session()->put('pizza_details', [
@@ -87,4 +95,34 @@ class PizzaController extends Controller
 
         return redirect('/pizzas');
     }
+    public function accept($id)
+{
+    $pizza = Pizza::findOrFail($id);
+    $pizza->update(['status' => 'making']);
+
+    return redirect()->route('pizzas.show', $id)->with('mssg', 'Order accepted! Pizza is now in making.');
+}
+
+public function cancel($id)
+{
+    $pizza = Pizza::findOrFail($id);
+    $pizza->update(['status' => 'canceled']);
+
+    return redirect()->route('pizzas.show', $id)->with('mssg', 'Order canceled.');
+}
+
+public function dispatch($id)
+{
+    $pizza = Pizza::findOrFail($id);
+    $pizza->update(['status' => 'dispatch']);
+
+    return redirect()->route('pizzas.show', $id)->with('mssg', 'Order dispatched!');
+}
+public function deliver($id)
+{
+    $pizza = Pizza::findOrFail($id);
+    $pizza->update(['status' => 'delivered']);
+
+    return redirect()->route('pizzas.show', $id)->with('mssg', 'Order delivered!');
+}
 }
